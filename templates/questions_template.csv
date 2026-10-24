@@ -1,0 +1,4 @@
+question_code,exam_code,section_code,topic,difficulty,option_count,stem,option_a,option_b,option_c,option_d,option_e,correct_option,explanation,marks,negative_marks,tags,status
+SAMPLE-CAT-QA-001,MOCK-CAT,QA,Percentages,easy,4,What is 15% of 200?,30,25,20,15,,A,SAMPLE: 15% of 200 = 0.15 x 200 = 30.,1,0,sample;percentages,draft
+SAMPLE-GMAT-QA-001,MOCK-GMAT,QA,Linear equations,medium,5,"If 2x + 3 = 11, what is x?",2,3,4,5,6,C,"SAMPLE: 2x = 8, so x = 4.",1,0,sample;algebra,draft
+SAMPLE-XAT-DM-001,MOCK-XAT,DM,Sets,medium,5,"A set has 4 elements. How many subsets does it have?",8,12,16,32,64,C,SAMPLE: a set with n elements has 2^n subsets; 2^4 = 16.,1,0,sample;sets,draft
