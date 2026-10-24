@@ -1,0 +1,23 @@
+{
+  "_status": "UNVERIFIED. None of these values are confirmed by the owner. Do not present them to students as facts. Until a value is confirmed, leave allowed_marks and allowed_negative_marks as null, which means the importer accepts any non-negative value.",
+  "exams": {
+    "MOCK-CAT": {
+      "verified": false,
+      "allowed_option_counts": [4, 5],
+      "allowed_marks": null,
+      "allowed_negative_marks": null
+    },
+    "MOCK-GMAT": {
+      "verified": false,
+      "allowed_option_counts": [4, 5],
+      "allowed_marks": null,
+      "allowed_negative_marks": null
+    },
+    "MOCK-XAT": {
+      "verified": false,
+      "allowed_option_counts": [4, 5],
+      "allowed_marks": null,
+      "allowed_negative_marks": null
+    }
+  }
+}
