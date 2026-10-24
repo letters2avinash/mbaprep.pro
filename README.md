@@ -64,6 +64,14 @@ update public.profiles set role = 'admin', sub_role = 'content'
 where id = '<auth-user-uuid>';
 ```
 
+## Accounts (email and password)
+
+- Pages: `/sign-up`, `/sign-in`. Sign-out is a server action (`signOut` in `src/app/auth/actions.ts`).
+- `src/proxy.ts` refreshes the Supabase session cookies on each page request. It does not decide access. Each page and action checks the role on the server.
+- Redirects after sign-in go through `safeNextPath`, which only allows paths on this site.
+- Supabase dashboard setup (dev project): enable the Email provider, keep "Confirm email" on, and set the Site URL to your local or preview address.
+- Email OTP through Brevo and SMS OTP through MSG91 are not wired yet. Google login is not set up yet.
+
 ## Question bank CSV
 
 - Templates: `templates/questions_template.csv`
