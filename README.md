@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# mbaprep-v2
 
-## Getting Started
+MBAPrep.pro rebuild, Phase 1 (launch scope).
 
-First, run the development server:
+- Exams: CAT, GMAT, XAT (other exams out of scope for now)
+- Accounts: email + password, Google login, OTP verification (email via Brevo, SMS via MSG91)
+- Question bank: CSV upload only (no in-app builder)
+- Exam player: one player, configured per exam
+- Roles: student, tutor (view-only), admin (sub-roles: content, website, academic, marketing, sales, accounts)
+- Payments: Cashfree
+- Stack: Next.js (TypeScript, App Router, Tailwind) as a PWA, Supabase (Postgres, Auth, Storage, Mumbai region), Sentry
+
+The old PHP site is retired. Nothing from the old codebase is used here.
+
+## Setup
+
+Requirements: Node.js 20.9 or newer (Next.js 16 needs it), npm, and the Supabase CLI for migrations.
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Create your local secrets file:
+
+   ```bash
+   cp private/config.example.env private/config.env
+   ```
+
+   Fill in real values in `private/config.env`. This file is git-ignored. Never print secret values in logs or commit them. Keys are read from the server environment only, never sent to the browser unless prefixed `NEXT_PUBLIC_`.
+
+3. Start the dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Check the code:
+
+   ```bash
+   npm run lint
+   npm run build
+   ```
+
+## Database (Supabase)
+
+Migrations live in `supabase/migrations`. Apply them to a local or development project:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx supabase link --project-ref <dev-project-ref>
+npx supabase db push
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Do not run `db push` against production without owner approval.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Question bank CSV
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Templates: `templates/questions_template.csv`
+- Column reference and allowed values: `templates/README.md`
+- Admin upload page validates every row before writing. Import runs in one transaction per file. A duplicate `question_code` rejects that row.
 
-## Learn More
+## Content rules
 
-To learn more about Next.js, take a look at the following resources:
+- Every question has a status: `draft`, `reviewed`, or `published`. Only `published` questions reach students. AI-drafted questions start as `draft`.
+- Exam patterns, marks, negative marks, and pricing are marked `unverified` in config until the owner confirms them. Do not present them as verified.
+- Tutor restrictions are enforced by Supabase Row Level Security and server checks, not by hiding UI.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment (not yet approved)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Nothing has been deployed. The owner must approve each step below.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create a Supabase project in the Mumbai region. Apply migrations.
+2. Create a Vercel (or Cloudflare Pages) project linked to this repository.
+3. Add every key from `private/config.example.env` as an environment variable in the host's dashboard. Do not commit values.
+4. Set `CASHFREE_ENV` to `sandbox` until payment flows are tested end to end.
+5. Connect the Sentry project using `SENTRY_DSN`.
+6. Deploy a preview build first. Promote to production only after the owner approves.
