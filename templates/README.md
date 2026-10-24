@@ -9,6 +9,7 @@ Sample rows are labelled `SAMPLE` in the `explanation` column and use placeholde
 - The exam and section must already exist in the app. Only the exam catalogue is seeded (`MOCK-CAT`, `MOCK-GMAT`, `MOCK-XAT`). Create sections in the admin area first.
 - The importer validates every row. A bad row is rejected with its row number and reason. Good rows are still written in one transaction per file.
 - A duplicate `question_code` (already in the database, or repeated in the file) rejects that row.
+- Report line numbers are file line numbers. The header is line 1, so the first question is line 2.
 - Marks and negative marks allowed values come from `config/exam-patterns.json`. Those values are marked unverified until the owner confirms them.
 
 ## Columns

@@ -39,9 +39,12 @@ Requirements: Node.js 20.9 or newer (Next.js 16 needs it), npm, and the Supabase
 4. Check the code:
 
    ```bash
+   npm test
    npm run lint
    npm run build
    ```
+
+Real secrets are read from `private/config.env` by `next.config.ts`. Values already set in the environment take priority.
 
 ## Database (Supabase)
 
@@ -54,11 +57,20 @@ npx supabase db push
 
 Do not run `db push` against production without owner approval.
 
+Admin accounts are not created from the app. Until an admin tool exists, the owner sets the role in the Supabase SQL editor, after the user has signed up:
+
+```sql
+update public.profiles set role = 'admin', sub_role = 'content'
+where id = '<auth-user-uuid>';
+```
+
 ## Question bank CSV
 
 - Templates: `templates/questions_template.csv`
 - Column reference and allowed values: `templates/README.md`
-- Admin upload page validates every row before writing. Import runs in one transaction per file. A duplicate `question_code` rejects that row.
+- Admin upload page: `/admin/questions/import`. Requires a signed-in admin with the `content` or `academic` sub-role. The role is checked on the server for the page and again for every upload.
+- Every row is validated before writing. Accepted rows are written in one database transaction per file (`import_questions_batch`). A duplicate `question_code` rejects that row.
+- Admin sign-in is not built yet. Until it is, the page can only be used by someone who already has a session cookie for an admin account.
 
 ## Content rules
 
