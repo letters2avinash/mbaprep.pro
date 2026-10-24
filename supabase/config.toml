@@ -1,0 +1,5 @@
+# Supabase CLI project config. Local development only.
+project_id = "mbaprep-v2"
+
+[db]
+major_version = 17
